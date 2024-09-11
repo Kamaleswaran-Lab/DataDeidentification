@@ -1,0 +1,8 @@
+This task is : 
+Number of unique patients:  23529
+Number of missing values in MRN:  45
+Number of missing values in PatientID:  0
+[0] > [33;01m/home/maror24/ImageAnon/dicom_anon_meta.py[00m([36;01m68[00m)<module>()
+-> combined_meta.to_csv('/labs/collab/Imaging/Imaging-PHI/Emory_Images/Meta/Combined_Meta_' + year + '_MRN.csv', index = False)
+(Pdb++) 
+This task is : 

@@ -1,0 +1,37 @@
+DeprecationWarning: 'source deactivate' is deprecated. Use 'conda deactivate'.
+/home/maror24/ImageAnon/dicom_anon_meta.py:49: DtypeWarning: Columns (0,1) have mixed types. Specify dtype option on import or set low_memory=False.
+  mastertable = pd.read_csv(path_to_mastertable, usecols=  columns_to_read)
+Traceback (most recent call last):
+  File "/home/maror24/ImageAnon/dicom_anon_meta.py", line 58, in <module>
+    combined_meta['true_empi'] = combined_meta['PatientID'].apply(lambda x: all_empi.iloc[x]['PatientID'])
+  File "/labs/kamaleswaranlab/anaconda3/rapids/lib/python3.10/site-packages/pandas/core/series.py", line 4771, in apply
+    return SeriesApply(self, func, convert_dtype, args, kwargs).apply()
+  File "/labs/kamaleswaranlab/anaconda3/rapids/lib/python3.10/site-packages/pandas/core/apply.py", line 1123, in apply
+    return self.apply_standard()
+  File "/labs/kamaleswaranlab/anaconda3/rapids/lib/python3.10/site-packages/pandas/core/apply.py", line 1174, in apply_standard
+    mapped = lib.map_infer(
+  File "pandas/_libs/lib.pyx", line 2924, in pandas._libs.lib.map_infer
+  File "/home/maror24/ImageAnon/dicom_anon_meta.py", line 58, in <lambda>
+    combined_meta['true_empi'] = combined_meta['PatientID'].apply(lambda x: all_empi.iloc[x]['PatientID'])
+  File "/labs/kamaleswaranlab/anaconda3/rapids/lib/python3.10/site-packages/pandas/core/indexing.py", line 1073, in __getitem__
+    return self._getitem_axis(maybe_callable, axis=axis)
+  File "/labs/kamaleswaranlab/anaconda3/rapids/lib/python3.10/site-packages/pandas/core/indexing.py", line 1625, in _getitem_axis
+    self._validate_integer(key, axis)
+  File "/labs/kamaleswaranlab/anaconda3/rapids/lib/python3.10/site-packages/pandas/core/indexing.py", line 1557, in _validate_integer
+    raise IndexError("single positional indexer is out-of-bounds")
+IndexError: single positional indexer is out-of-bounds
+DeprecationWarning: 'source deactivate' is deprecated. Use 'conda deactivate'.
+/home/maror24/ImageAnon/dicom_anon_meta.py:49: DtypeWarning: Columns (0,1) have mixed types. Specify dtype option on import or set low_memory=False.
+  mastertable = pd.read_csv(path_to_mastertable, usecols=  columns_to_read)
+DeprecationWarning: 'source deactivate' is deprecated. Use 'conda deactivate'.
+/home/maror24/ImageAnon/dicom_anon_meta.py:49: DtypeWarning: Columns (0,1) have mixed types. Specify dtype option on import or set low_memory=False.
+  mastertable = pd.read_csv(path_to_mastertable, usecols=  columns_to_read)
+slurmstepd: error: *** JOB 515771 ON hugenode6 CANCELLED AT 2024-09-06T09:29:29 ***
+DeprecationWarning: 'source deactivate' is deprecated. Use 'conda deactivate'.
+/home/maror24/ImageAnon/dicom_anon_meta.py:49: DtypeWarning: Columns (0,1) have mixed types. Specify dtype option on import or set low_memory=False.
+  mastertable = pd.read_csv(path_to_mastertable, usecols=  columns_to_read)
+DeprecationWarning: 'source deactivate' is deprecated. Use 'conda deactivate'.
+slurmstepd: error: *** JOB 515789 ON hugenode6 CANCELLED AT 2024-09-06T09:39:28 ***
+DeprecationWarning: 'source deactivate' is deprecated. Use 'conda deactivate'.
+/home/maror24/ImageAnon/dicom_anon_meta.py:49: DtypeWarning: Columns (0,1) have mixed types. Specify dtype option on import or set low_memory=False.
+  mastertable = pd.read_csv(path_to_mastertable, usecols=  columns_to_read)

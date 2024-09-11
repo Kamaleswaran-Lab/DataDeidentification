@@ -1,0 +1,12 @@
+DeprecationWarning: 'source deactivate' is deprecated. Use 'conda deactivate'.
+/home/maror24/ImageAnon/dicom_match_time_csn.py:21: DtypeWarning: Columns (2,3,4,5,25,37,71) have mixed types. Specify dtype option on import or set low_memory=False.
+  combined_meta = pd.read_csv(path_to_combined_meta)
+/home/maror24/ImageAnon/dicom_match_time_csn.py:24: DtypeWarning: Columns (0,1) have mixed types. Specify dtype option on import or set low_memory=False.
+  mastertable = pd.read_csv(path_to_mastertable)
+slurmstepd: error: *** JOB 515822 ON hugenode5 CANCELLED AT 2024-09-08T10:35:31 DUE TO TIME LIMIT ***
+DeprecationWarning: 'source deactivate' is deprecated. Use 'conda deactivate'.
+/home/maror24/ImageAnon/dicom_match_time_csn.py:21: DtypeWarning: Columns (2,7,45,51,55,56,57,71) have mixed types. Specify dtype option on import or set low_memory=False.
+  combined_meta = pd.read_csv(path_to_combined_meta)
+/home/maror24/ImageAnon/dicom_match_time_csn.py:24: DtypeWarning: Columns (0,1) have mixed types. Specify dtype option on import or set low_memory=False.
+  mastertable = pd.read_csv(path_to_mastertable)
+slurmstepd: error: *** JOB 518136 ON hugenode7 CANCELLED AT 2024-09-09T14:53:16 ***

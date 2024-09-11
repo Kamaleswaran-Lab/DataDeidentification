@@ -1,0 +1,15 @@
+DeprecationWarning: 'source deactivate' is deprecated. Use 'conda deactivate'.
+/home/maror24/ImageAnon/dicom_anon_meta.py:49: DtypeWarning: Columns (0,1) have mixed types. Specify dtype option on import or set low_memory=False.
+  mastertable = pd.read_csv(path_to_mastertable, usecols=  columns_to_read)
+Traceback (most recent call last):
+  File "/home/maror24/ImageAnon/dicom_anon_meta.py", line 68, in <module>
+    combined_meta.to_csv('/labs/collab/Imaging/Imaging-PHI/Emory_Images/Meta/Combined_Meta_' + year + '_MRN.csv', index = False)
+  File "/home/maror24/ImageAnon/dicom_anon_meta.py", line 68, in <module>
+    combined_meta.to_csv('/labs/collab/Imaging/Imaging-PHI/Emory_Images/Meta/Combined_Meta_' + year + '_MRN.csv', index = False)
+  File "/labs/kamaleswaranlab/anaconda3/rapids/lib/python3.10/bdb.py", line 90, in trace_dispatch
+    return self.dispatch_line(frame)
+  File "/labs/kamaleswaranlab/anaconda3/rapids/lib/python3.10/bdb.py", line 115, in dispatch_line
+    if self.quitting: raise BdbQuit
+bdb.BdbQuit
+DeprecationWarning: 'source deactivate' is deprecated. Use 'conda deactivate'.
+slurmstepd: error: *** JOB 515758 ON hugenode6 CANCELLED AT 2024-09-06T09:11:55 ***
