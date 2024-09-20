@@ -7,7 +7,7 @@
 #SBATCH --ntasks=1
 #SBATCH --array=0
 
-#SBATCH --mem 64G
+#SBATCH --mem 128G
 
 #SBATCH -o ../OutputErrorFiles/meta.out
 #SBATCH -e ../OutputErrorFiles/meta.err
