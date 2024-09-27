@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J MetaNiffler
+#SBATCH -J DatesNiffler
 #SBATCH -p batch,overflow
 #SBATCH -G 0
 #SBATCH -t 48:0:0
