@@ -3,7 +3,9 @@
 Current location of Data:  /labs/collab/K-lab-MODS/MODS-PHI/<Emory/Grady>_Data/
 
 New Location of Deidentified data: 
+
 EMORY: */labs/collab/K-lab-MODS/deid_Emory*
+
 GRADY: */labs/collab/K-lab-MODS/deid_grady*
 
 ## De-identification Steps:
