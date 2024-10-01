@@ -27,9 +27,11 @@ class EMRDeidentification:
 
         self.hash_key = hash_key
         self.path_to_deid_data = deid_path
+        save_path = self.path_to_deid_data / (str(self.file_name.stem) + '.dsv')
+        print(self.type + ' file will be saved to ' + str(save_path))
 
     def read_file(self):
-        self.df = pd.read_csv(self.file_name, sep = '|', nrows = 100)
+        self.df = pd.read_csv(self.file_name, sep = '|')
         
     def hash_identifiers(self, save = False):
         """
@@ -48,8 +50,8 @@ class EMRDeidentification:
                 matching_list = pd.DataFrame( columns= [column, column + '_deid'])
                 matching_list[column] = self.df[column].unique()
                 matching_list[column + '_deid'] = matching_list[column].apply(lambda x: hash_value(x, self.hash_key))
-                matching_list.to_csv(self.file_name.parent / ('matching_list_' + column + '.csv'), index = False)
-                print(column + " matching list saved")
+                matching_list.to_csv(self.file_name.parent / ('matching_list_Oct1_' + column + '.csv'), index = False)
+                print(column + " matching list saved to " + str(self.file_name.parent / ('matching_list_Oct1_' + column + '.csv')))
     
     def drop_identifiers(self):
         """
@@ -99,7 +101,7 @@ class EMRDeidentification:
         date_utc = pd.to_datetime(date).tz_localize('UTC')
         date_unix = date_utc.timestamp()
         date_unix_deid = float('0' + str(date_unix)[1:])
-        return pd.to_datetime(date_unix_deid, unit = 's').strftime('%Y-%m-%d')
+        return pd.to_datetime(date_unix_deid, unit = 's').strftime('%Y-%m-%d %H:%M:%S')
     
     def save_file(self):
         self.df.to_csv(self.path_to_deid_data / (str(self.file_name.stem) + '.dsv'), index = False, sep = '|')

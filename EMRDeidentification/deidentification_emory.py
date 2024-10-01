@@ -26,7 +26,7 @@ if __name__ == "__main__":
     'Encounter': EMRDeidentification(file_name= path_to_data / f'CJSEPSIS_ENCOUNTER_{year}.dsv' , deid_path= path_to_deid_data,
                                      type = 'Encounter',  
                                      hash_columns = ['pat_id', 'csn'], 
-                                     drop_columns = ['zipcode'], 
+                                     drop_columns = ['zip_code'], 
                                      categorical_columns = ['facility_nm'], 
                                      date_columns = ['ed_presentation_time', 'hospital_admission_date_time', \
                                                      'hospital_discharge_date_time'], 
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     'GCS': EMRDeidentification(file_name= path_to_data /f'CJSEPSIS_GCS_{year}.dsv',  deid_path= path_to_deid_data, 
                                     type = 'GCS',
                                     hash_columns = ['pat_id', 'csn'], 
-                                    drop_columns = ['flo_id', 'flo_row_id', 'recorded_time', 'flo_name'], 
+                                    drop_columns = ['flo_row_id', 'flo_name'], 
                                     categorical_columns = [], 
                                     date_columns = ['recorded_time'], 
                                     hash_key = hash_key),
@@ -126,7 +126,7 @@ if __name__ == "__main__":
                                     hash_columns = ['pat_id', 'csn'], 
                                     drop_columns = [], 
                                     categorical_columns = [], 
-                                    date_columns = ['recorded_time', 'vent_start', 'vent_stop'], 
+                                    date_columns = ['recorded_time', 'vent_start_time', 'vent_stop_time'], 
                                     hash_key = hash_key)
     } 
     
