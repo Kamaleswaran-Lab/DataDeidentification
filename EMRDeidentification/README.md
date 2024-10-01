@@ -19,4 +19,12 @@ GRADY: */labs/collab/K-lab-MODS/deid_grady*
       * First Name 
       * Last Name
       * Mi (middle name)
-     
+      * Ethnicity
+      * Race
+   3. Encounters data file: The following columns were dropped:
+      * zipcode 
+   4. All dates and times were deidentified using the following scheme:
+      1. Times are converted to UTC.
+      2. The _datetime_ object is converted to unix timestamp. 
+      3. The first digit is replaced with a 0
+      4. The resulting timestamp is converted back to datetime.     
