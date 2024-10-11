@@ -1,9 +1,11 @@
 import pandas as pd
 import hashlib
+from pathlib import Path
+import glob 
 
 class EMRDeidentification:
-    def __init__(self, file_name, deid_path,  type, hash_columns, drop_columns, categorical_columns,
-                  date_columns, hash_key = '123'):
+    def __init__(self, file_name, deid_path,  type, hash_columns, drop_columns, categorical_columns, age_columns,
+                  date_columns, hash_key = '123', sep = '|'):
         """
         Arguments:
 
@@ -13,6 +15,10 @@ class EMRDeidentification:
         4. drop_columns: list - List of columns to drop
         5. categorical_columns: list - List of columsn to convert to categorical
         6. date_columns: list - List of date/time columns to shift by a random number
+        7. hash_key: str - Key to hash the identifiers
+        8. deid_path: str - Path to save the deidentified file
+        9. sep: str - Delimiter of the file
+        10. age_columns: list - List of age columns to deidentify
 
         """
         self.type = type
@@ -20,19 +26,36 @@ class EMRDeidentification:
         self.drop_columns = drop_columns
         self.categorical_columns = categorical_columns
         self.date_columns = date_columns
-        self.file_name = file_name
+        self.age_columns = age_columns
+        self.file_name = str(file_name)
         #Check if file exists
-        if not self.file_name.exists():
+        print(self.file_name)
+        self.file_name = glob.glob(self.file_name)
+        print(self.file_name)
+        if len(self.file_name) == 0:
             raise FileNotFoundError(f'{self.file_name} does not exist')
+        self.file_name = Path(self.file_name[0])
 
         self.hash_key = hash_key
         self.path_to_deid_data = deid_path
         save_path = self.path_to_deid_data / (str(self.file_name.stem) + '.dsv')
+        self.sep = sep 
         print(self.type + ' file will be saved to ' + str(save_path))
 
     def read_file(self):
-        self.df = pd.read_csv(self.file_name, sep = '|')
+        self.df = pd.read_csv(self.file_name, sep = self.sep)
+    
+    def deidentify_age(self):
+        """all age > 80 --> 80"""
+        for column in self.age_columns:
+            if column in self.df.columns:
+                self.df[column] = self.df[column].apply(lambda x: 80 if x > 80 else x)
+            elif column.upper() in self.df.columns:
+                self.df[column.upper()] = self.df[column.upper()].apply(lambda x: 80 if x > 80 else x)
+            else:
+                print(column + ' does not exist in ' + str(self.file_name))
         
+
     def hash_identifiers(self, save = False):
         """
         hash identifiers in the dataframe, and save the matching list if save is True
@@ -41,14 +64,17 @@ class EMRDeidentification:
             if column in self.df.columns:
                 self.df[column] = self.df[column].apply(lambda x: hash_value(x, self.hash_key))
             elif column.upper() in self.df.columns:
-                self.df[column] = self.df[column].apply(lambda x: hash_value(x, self.hash_key))
+                self.df[column.upper()] = self.df[column.upper()].apply(lambda x: hash_value(x, self.hash_key))
             else:
                 print(column + ' does not exist in ' + str(self.file_name))
         
         if save:
             for column in self.hash_columns:
                 matching_list = pd.DataFrame( columns= [column, column + '_deid'])
-                matching_list[column] = self.df[column].unique()
+                if column in self.df.columns:
+                    matching_list[column] = self.df[column].unique()
+                elif column.upper() in self.df.columns:
+                    matching_list[column] = self.df[column.upper()].unique()
                 matching_list[column + '_deid'] = matching_list[column].apply(lambda x: hash_value(x, self.hash_key))
                 matching_list.to_csv(self.file_name.parent / ('matching_list_Oct1_' + column + '.csv'), index = False)
                 print(column + " matching list saved to " + str(self.file_name.parent / ('matching_list_Oct1_' + column + '.csv')))

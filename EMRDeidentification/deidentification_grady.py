@@ -1,92 +1,202 @@
 import pandas as pd
-import hashlib
 from pathlib import Path
 from argparse import ArgumentParser
 
-hash_key = '123'
+from emrd import *
 
 YEARS = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022]
-
-def hash_value(value, hash_key):
-    return hashlib.sha256((str(value) + hash_key).encode()).hexdigest()
-
-identifier_columns = ['pat_id', 'csn']
-drop_columns = ['first_name', 'last_name', 'mi', 'last4_ssn'] 
+hash_key = '123'
 
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument('--index', type = int, required = True)
     args = parser.parse_args()
     year = YEARS[args.index]
+    print(year)
 
     path_to_data = Path('/labs/collab/K-lab-MODS/MODS-PHI/Grady_Data/')
-    path_to_deid_data = Path('/labs/kamaleswaranlab/MODS/Data/deid_grady/')
-    path_to_lists = Path('/labs/collab/K-lab-MODS/MODS-PHI/Grady_Data/1. Administrative Attributes')
+    path_to_deid_data = Path('/labs/collab/K-lab-MODS/deid_grady/noPHI')
+
+    path_to_data = path_to_data 
     path_to_deid_data = path_to_deid_data / str(year)
     path_to_deid_data.mkdir(parents = True, exist_ok = True)
 
-    files = list(path_to_data.glob(f'*/*/*_{year}_*.txt'))
+
+    settings = {
+    'Encounter': EMRDeidentification(file_name= path_to_data / '1. Administrative Attributes/Encounters'/ f'encounter_{year}_decomp*.txt' , deid_path= path_to_deid_data,
+                                     type = 'Encounter',  
+                                     hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+                                     drop_columns = [], 
+                                     categorical_columns = [], 
+                                     age_columns = ['age'],
+                                     date_columns = ['ed_presentation_time', 'hospital_admission_date_time', \
+                                                     'hospital_discharge_date_time'], 
+                                     hash_key = hash_key),
+    'BedLocation': EMRDeidentification(file_name= path_to_data / '1. Administrative Attributes/Bed Locations' /f'bed_location_{year}_decomp*.txt',  deid_path= path_to_deid_data,
+                                    type = 'BedLocation', 
+                                     hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+                                     drop_columns = [], 
+                                     categorical_columns = [], 
+                                     age_columns= [],
+                                     date_columns = ['bed_location_start', 'bed_location_end'], 
+                                     hash_key = hash_key),
+    'Diagnosis': EMRDeidentification(file_name= path_to_data /'5. ICD Codes/Diagnosis' / f'diagnoses_{year}_decomp*.txt',  deid_path= path_to_deid_data, 
+                                    type = 'Diagnosis',
+                                    hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+                                    drop_columns = [], 
+                                    categorical_columns = [], 
+                                    date_columns = ['dx_time_date'], 
+                                    age_columns= [],
+                                    hash_key = hash_key),
+    'Demographics': EMRDeidentification(file_name= path_to_data / '1. Administrative Attributes/Demographics'/ f'demographics_{year}_decomp*.txt',  deid_path= path_to_deid_data,
+                                    type = 'Demographics',
+                                    hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+                                    drop_columns = ['first_name', 'last_name', 'mi', 'last4_ssn', 'dob', 'death_date', 'race', 'ethnicity'],
+                                    categorical_columns = [], 
+                                    age_columns= [],
+                                    date_columns = [], 
+                                    hash_key = hash_key),
+    'Cultures': EMRDeidentification(file_name= path_to_data / '3. Labs & Cultures/Cultures' / f'cultures_{year}_decomp*.txt',  deid_path= path_to_deid_data,
+                                    type = 'Cultures',
+                                    hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+                                    drop_columns = ['order_id', 'result_id'], 
+                                    categorical_columns = [], 
+                                    date_columns = ['specimen_collect_time', 'order_time', 'lab_result_time'], 
+                                    age_columns= [],
+                                    hash_key = hash_key),
+    'Labs': EMRDeidentification(file_name= path_to_data /'3. Labs & Cultures/Labs' / f'lab_{year}_decomp*.txt',  deid_path= path_to_deid_data,
+                                    type = 'Labs',
+                                    hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+                                    drop_columns = [], 
+                                    categorical_columns = [], 
+                                    age_columns= [],
+                                    date_columns = ['collection_time', 'lab_result_time'], 
+                                    hash_key = hash_key),
+    'Vitals': EMRDeidentification(file_name= path_to_data /'4. Patient Assessments/Vitals'/ f'vitals_{year}_decomp*.txt',  deid_path= path_to_deid_data,
+                                    type = 'Vitals',
+                                    hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+                                    drop_columns = [], 
+                                    categorical_columns = [], 
+                                    age_columns= [],
+                                    date_columns = ['recorded_time'], 
+                                    hash_key = hash_key),
+    'GCS': EMRDeidentification(file_name= path_to_data /'4. Patient Assessments/GCS'/ f'gcs_{year}_decomp*.txt',  deid_path= path_to_deid_data, 
+                                    type = 'GCS',
+                                    hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+                                    drop_columns = [], 
+                                    categorical_columns = [], 
+                                    age_columns= [],
+                                    date_columns = ['recorded_time'], 
+                                    hash_key = hash_key),
+    'INFUSIONMEDS': EMRDeidentification(file_name= path_to_data /'2. Fluids & Meds/Infusion Medications' / f'infusion_meds_{year}_decomp_*.txt',  deid_path= path_to_deid_data,
+                                    type = 'INFUSIONMEDS',
+                                    hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+                                    drop_columns = ['order_med_id'], 
+                                    categorical_columns = [], 
+                                    age_columns= [],
+                                    date_columns = ['med_order_time', 'med_action_time', 'med_start', 'med_stop'], 
+                                    hash_key = hash_key),
+    'NONINFUSIONMEDS': EMRDeidentification(file_name= path_to_data /'2. Fluids & Meds/Non-Infusion Medications' / f'non_infusion_meds_{year}_decomp_*.txt',  deid_path= path_to_deid_data,
+                                    type = 'NONINFUSIONMEDS',
+                                    hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+                                    drop_columns = ['order_med_id'], 
+                                    categorical_columns = [], 
+                                    age_columns= [],
+                                    date_columns = ['med_order_time', 'med_action_time', 'med_start', 'med_stop'], 
+                                    hash_key = hash_key),
+    'ICDPROCEDURE': EMRDeidentification(file_name= path_to_data /'5. ICD Codes/ICD Procedures' / f'icd_procedures_{year}_decomp*.txt' ,  deid_path= path_to_deid_data,
+                                     type = 'ICDPROCEDURE',
+                                    hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+                                    drop_columns = ['performing_physician'], 
+                                    categorical_columns = [], 
+                                    age_columns= [],
+                                    date_columns = [ 'procedure_date'], 
+                                    hash_key = hash_key),
+    'ORPROCEDURE': EMRDeidentification(file_name= path_to_data /'5. ICD Codes/OR Procedures' / f'or_procedures_{year}_decomp*.txt',  deid_path= path_to_deid_data,
+                                    type = 'ORPROCEDURE',
+                                    hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+                                    drop_columns = ['log_id', 'primary_physician_nm'], 
+                                    categorical_columns = [], 
+                                    age_columns= [],
+                                    date_columns = ['surgery_date', 'in_or_dttm', 'procedure_start_dttm', 'procedure_comp_dttm', 'out_or_dttm'], 
+                                    hash_key = hash_key),
+    'SENSITIVITIES': EMRDeidentification(file_name= path_to_data / '3. Labs & Cultures/Sensitivities' / f'sensitivities_{year}_decomp*.txt',  deid_path= path_to_deid_data,
+                                     type = 'SENSITIVITIES',
+                                    hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+                                    drop_columns = ['order_id', 'result_id'], 
+                                    categorical_columns = [], 
+                                    age_columns= [],
+                                    date_columns = ['order_time', 'sens_obs_inst_tm', 'sens_anl_inst_tm'], 
+                                    hash_key = hash_key),
+    'VENT': EMRDeidentification(file_name= path_to_data /'6. Vent'/ f'vent*_{year}_*.txt',  deid_path= path_to_deid_data,
+                                    type = 'VENT',
+                                    hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+                                    drop_columns = [], 
+                                    age_columns= [],
+                                    categorical_columns = [], 
+                                    date_columns = ['recorded_time', 'vent_start_time', 'vent_stop_time', 'vent_recorded_time'], 
+                                    hash_key = hash_key),
+    'RADIOLOGY': EMRDeidentification(file_name= path_to_data /'7. Radiology'/ f'radiology*_{year}_decomp*.txt',  deid_path= path_to_deid_data,
+                                    type = 'RADIOLOGY',
+                                    hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id', 'accession_num'], 
+                                    drop_columns = ['order_id'], 
+                                    categorical_columns = [], 
+                                    date_columns = ['rad_order_time', 'begin_exam_dttm', 'end_exam_dttm'], 
+                                    age_columns = [],
+                                    hash_key = hash_key),
+    'LINES': EMRDeidentification(file_name= path_to_data /'8. Lines'/ 'Central Line' / f'central_line_{year}_decomp*.txt',  deid_path= path_to_deid_data,
+                                    type = 'LINES',
+                                    hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+                                    drop_columns = [], 
+                                    categorical_columns = [], 
+                                    date_columns = ['placement_date', 'removal_date'], 
+                                    age_columns = [],
+                                    hash_key = hash_key),
+    #'COMORBIDITIES': EMRDeidentification(file_name= path_to_data /'4. Patient Assessments/Comorbidities'/ f'comorbidities*_{year}_decomp*.txt',  deid_path= path_to_deid_data,
+    #                                type = 'COMORBIDITIES',
+    #                                hash_columns = ['PAT_MRN_ID'], 
+    #                                drop_columns = [], 
+    #                                categorical_columns = [], 
+    #                                date_columns = ['DATE_OF_ENTRY'], 
+    #                                age_columns = [],
+    #                                hash_key = hash_key),
+    'FAST': EMRDeidentification(file_name= path_to_data /'4. Patient Assessments/FAST'/ f'fast_{year}_decomp*.txt',  deid_path= path_to_deid_data,
+                                    type = 'FAST',
+                                    hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+                                    drop_columns = [], 
+                                    categorical_columns = [], 
+                                    date_columns = ['recorded_time'], 
+                                    age_columns = [],
+                                    hash_key = hash_key),
+    'BLOODTRANSFUSIONS': EMRDeidentification(file_name= path_to_data /'2. Fluids & Meds/Blood Products'/ f'blood_transfusion*_{year}_decomp*.txt',  deid_path= path_to_deid_data,
+                                type = 'BLOODTRANSFUSIONS',
+                                hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+                                drop_columns = ['order_id'], 
+                                categorical_columns = [], 
+                                date_columns = ['documented_time'], 
+                                age_columns = [],
+                                hash_key = hash_key),
+    'INOUT': EMRDeidentification(file_name= path_to_data /'2. Fluids & Meds/In\'s & Out\'s'/ f'intake_output_{year}_decomp*.txt',  deid_path= path_to_deid_data,
+                                type = 'INOUT',
+                                hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+                                drop_columns = [], 
+                                categorical_columns = [], 
+                                date_columns = ['documented_time'], 
+                                age_columns = [],
+                                hash_key = hash_key),
+    } 
     
-    for file in files:
-        print(file)
-        if 'clinical_notes' in file.name:
-            print(file.name + ' skipped')
-            continue
-        df = pd.read_csv(file, sep = '|', error_bad_lines = False)
-        
-        if 'encounter' in file.name:
-            matching_list = pd.DataFrame( columns= ['pat_id', 'pat_id_deid'])
-            matching_list['pat_id'] = df['pat_id'].unique()
-            matching_list['pat_id_deid'] = matching_list['pat_id'].apply(lambda x: hash_value(x, hash_key))
-            matching_list.to_csv(path_to_lists / f'matching_list_patid_{year}.csv', index = False)
-            print("Pat ID matching list saved")   
-            
-            matching_list = pd.DataFrame( columns= ['csn', 'csn_deid'])
-            matching_list['csn'] = df['csn'].unique()
-            matching_list['csn_deid'] = matching_list['csn'].apply(lambda x: hash_value(x, hash_key))
-            matching_list.to_csv(path_to_lists / f'matching_list_csn_{year}.csv', index = False)
-            print("CSN matching list saved")
-
-            matching_list = pd.DataFrame( columns= ['har', 'har_deid'])
-            matching_list['har'] = df['har'].unique()
-            matching_list['har_deid'] = matching_list['har'].apply(lambda x: hash_value(x, hash_key))
-            matching_list.to_csv(path_to_lists / f'matching_list_csn_{year}.csv', index = False)
-            print("HAR matching list saved")
-
-            matching_list = pd.DataFrame( columns= ['mrn', 'mrn_deid'])
-            matching_list['mrn'] = df['mrn'].unique()
-            matching_list['mrn_deid'] = matching_list['mrn'].apply(lambda x: hash_value(x, hash_key))
-            matching_list.to_csv(path_to_lists / f'matching_list_csn_{year}.csv', index = False)
-            print("MRN matching list saved")
-
-            try:
-                df.drop(columns=['zip_code'], inplace = True)
-            except KeyError:
-                df.drop(columns = ['ZIP_CODE'], inplace = True)
-            print("Zip code column dropped")
-
-        # Deidentify identifier columns
-        for column in identifier_columns:
-            try:
-                if column in df.columns:
-                    df[column] = df[column].apply(lambda x: hash_value(x, hash_key))
-                else:
-                    column = column.upper()
-                    df[column] = df[column].apply(lambda x: hash_value(x, hash_key))
-            except KeyError:
-                print(column + ' does not exist in ' + file.name)
-        
-        print(file.name + " deidentified")
-        if 'DEMOGRAPHICS' in file.name:
-            #Drop Columns
-            try:
-                df.drop(columns=drop_columns, inplace = True)
-            except KeyError:
-                drop_columns = [column.upper() for column in drop_columns]
-                df.drop(columns = drop_columns, inplace = True)
-            print("Demographic columns dropped")
-
-        df.to_csv(path_to_deid_data / file.name, index = False, sep = '|')
-        del df 
+    #import pdb; pdb.set_trace()
+    for key in settings:
+        print(key)
+        settings[key].read_file()
+        if key == 'Encounter':
+            settings[key].hash_identifiers(save = True)
+        else:
+            settings[key].hash_identifiers()
+        settings[key].drop_identifiers()
+        settings[key].convert_to_categorical()
+        settings[key].shift_dates()
+        settings[key].save_file()
 
     

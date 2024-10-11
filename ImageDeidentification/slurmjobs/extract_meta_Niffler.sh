@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J DatesNiffler
+#SBATCH -J PolishGrady
 #SBATCH -p batch,overflow
 #SBATCH -G 0
 #SBATCH -t 48:0:0
@@ -9,8 +9,8 @@
 
 #SBATCH --mem 128G
 
-#SBATCH -o ../OutputErrorFiles/meta.out
-#SBATCH -e ../OutputErrorFiles/meta.err
+#SBATCH -o ../OutputErrorFiles/metaGrady.out
+#SBATCH -e ../OutputErrorFiles/metaGrady.err
 
 source /home/maror24/anaconda3/bin/deactivate
 source /home/maror24/anaconda3/bin/activate rapids

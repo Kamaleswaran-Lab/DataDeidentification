@@ -1,32 +1,17 @@
 #!/bin/bash
-
-#SBATCH -J deide
+#SBATCH -J GdeMR
 #SBATCH -p batch,overflow
-#SBATCH -G 0
 #SBATCH -t 24:0:0
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-##SBATCH --array=0-8
+#SBATCH --array=0-8
 #SBATCH --mem 72G
+#SBATCH -o ./out/grdeid_%a.out
+#SBATCH -e ./out/grdeid_%a.err
 
-#SBATCH -o ./oefiles/deid_2022.out
-#SBATCH -e ./oefiles/deid_2022.err
+echo This is the num processes - $SLURM_ARRAY_TASK_COUNT
 
 source /home/maror24/anaconda3/bin/deactivate
 source /home/maror24/anaconda3/bin/activate rapids
 
-export LANGUAGE=UTF-8
-export LC_ALL=en_US.UTF-8
-export LANG=UTF-8
-export LC_CTYPE=en_US.UTF-8
-export LANG=en_US.UTF-8
-export LC_COLLATE=$LANG
-export LC_CTYPE=$LANG
-export LC_MESSAGES=$LANG
-export LC_MONETARY=$LANG
-export LC_NUMERIC=$LANG
-export LC_TIME=$LANG
-export LC_ALL=$LANG
-
-echo $PATH
-python deidentification.py --index 8
+python deidentification_grady.py --index $SLURM_ARRAY_TASK_ID
