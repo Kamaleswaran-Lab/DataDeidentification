@@ -11,18 +11,19 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument('--index', type = int, required = True)
     args = parser.parse_args()
-    year = YEARS[args.index]
+    year = args.index
     print(year)
 
     path_to_data = Path('/labs/collab/K-lab-MODS/MODS-PHI/Grady_Data/')
     path_to_deid_data = Path('/labs/collab/K-lab-MODS/deid_grady/noPHI')
 
     path_to_data = path_to_data 
-    path_to_deid_data = path_to_deid_data / 'decomp_by_MRN'
+    path_to_deid_data = path_to_deid_data / str(year) #'decomp_by_MRN'
     path_to_deid_data.mkdir(parents = True, exist_ok = True)
 
 
     settings = {
+        """
     'Encounter': EMRDeidentification(file_name= path_to_data / '1. Administrative Attributes/Encounters'/ f'encounter_2014-2022_decomp*.txt' , deid_path= path_to_deid_data,
                                      type = 'Encounter',  
                                      hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
@@ -167,23 +168,23 @@ if __name__ == "__main__":
                                     categorical_columns = [], 
                                     date_columns = ['recorded_time'], 
                                     age_columns = [],
-                                    hash_key = hash_key),
-    'BLOODTRANSFUSIONS': EMRDeidentification(file_name= path_to_data /'2. Fluids & Meds/Blood Products'/ f'blood_transfusion*_2014-2022_decomp*.txt',  deid_path= path_to_deid_data,
+                                    hash_key = hash_key), """
+    'BLOODTRANSFUSIONS': EMRDeidentification(file_name= path_to_data /'2. Fluids & Meds/Blood Products'/ f'blood_transfusion*_{year}_decomp*.txt',  deid_path= path_to_deid_data,
                                 type = 'BLOODTRANSFUSIONS',
                                 hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
                                 drop_columns = ['order_id'], 
                                 categorical_columns = [], 
-                                date_columns = ['documented_time'], 
+                                date_columns = ['documented_time', 'order_time', 'transfusion_start', 'transfusion_end', 'transfusion_complete_time'], 
                                 age_columns = [],
                                 hash_key = hash_key),
-    'INOUT': EMRDeidentification(file_name= path_to_data /'2. Fluids & Meds/In\'s & Out\'s'/ f'intake_output_2014-2022_decomp*.txt',  deid_path= path_to_deid_data,
-                                type = 'INOUT',
-                                hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
-                                drop_columns = [], 
-                                categorical_columns = [], 
-                                date_columns = ['documented_time'], 
-                                age_columns = [],
-                                hash_key = hash_key),
+    #'INOUT': EMRDeidentification(file_name= path_to_data /'2. Fluids & Meds/In\'s & Out\'s'/ f'intake_output_2014-2022_decomp*.txt',  deid_path= path_to_deid_data,
+    #                            type = 'INOUT',
+    #                            hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+    #                            drop_columns = [], 
+    #                            categorical_columns = [], 
+    #                            date_columns = ['documented_time'], 
+    #                            age_columns = [],
+    #                            hash_key = hash_key),
     } 
     
     #import pdb; pdb.set_trace()

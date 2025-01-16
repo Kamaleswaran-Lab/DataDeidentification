@@ -43,7 +43,12 @@ class EMRDeidentification:
         print(self.type + ' file will be saved to ' + str(save_path))
 
     def read_file(self):
-        self.df = pd.read_csv(self.file_name, sep = self.sep)
+        if self.file_name.suffix == '.csv':
+            self.df = pd.read_csv(self.file_name, sep = self.sep)
+        elif self.file_name.suffix == '.dsv':
+            self.df = pd.read_csv(self.file_name, sep = '|')
+        elif self.file_name.suffix == '.pickle' or self.file_name.suffix == '.pkl':
+            self.df = pd.read_pickle(self.file_name)
     
     def deidentify_age(self):
         """all age > 80 --> 80"""
@@ -76,8 +81,8 @@ class EMRDeidentification:
                 elif column.upper() in self.df.columns:
                     matching_list[column] = self.df[column.upper()].unique()
                 matching_list[column + '_deid'] = matching_list[column].apply(lambda x: hash_value(x, self.hash_key))
-                matching_list.to_csv(self.file_name.parent / ('matching_list_Oct1_' + column + '.csv'), index = False)
-                print(column + " matching list saved to " + str(self.file_name.parent / ('matching_list_Oct1_' + column + '.csv')))
+                matching_list.to_csv(self.file_name.parent / ('matching_list_Jan16_' + column + '.csv'), index = False)
+                print(column + " matching list saved to " + str(self.file_name.parent / ('matching_list_Jan16_' + column + '.csv')))
     
     def drop_identifiers(self):
         """

@@ -8,8 +8,8 @@ hash_key = '123'
 
 if __name__ == "__main__":
 
-    path_to_data = Path('/labs/collab/Imaging/Imaging-PHI/Emory_Images/ImagesWithNotes/ImagesWithNotesMeta')
-    path_to_deid_data = Path('/labs/collab/Imaging/Imaging-PHI/Emory_Images/ImagesWithNotes/ImagesWithNotesMetaAnon')
+    path_to_data = Path('/labs/collab/Imaging/Imaging-PHI/chest_xrays')
+    path_to_deid_data = Path('/labs/collab/Imaging/Imaging-PHI/chest_xrays/anon')
 
     path_to_data = path_to_data 
     path_to_deid_data = path_to_deid_data 
@@ -17,13 +17,12 @@ if __name__ == "__main__":
 
   
     settings = {
-    'Meta': EMRDeidentification(file_name= path_to_data / 'metadata.csv' , deid_path= path_to_deid_data,
+    'Meta': EMRDeidentification(file_name= path_to_data / 'chest_xrays_new2015.csv' , deid_path= path_to_deid_data,
                                      type = 'Meta',  
-                                     hash_columns = ['PatientID', 'StudyInstanceUID', 'SeriesInstanceUID', 'SOPInstanceUID', 'AccessionNumber'], 
+                                     hash_columns = ['PatientID', 'PATIENTID', 'ENCNTR_ID', 'EMPI', 'StudyInstanceUID', 'SeriesInstanceUID', 'SOPInstanceUID', 'AccessionNumber'], 
                                      drop_columns = [], 
                                      categorical_columns = [], 
-                                     date_columns = ['ContentTime', 'SeriesDate', 'AcquisitionTime', \
-                                                     'SeriesTime', 'StudyDate', 'StudyTime'], 
+                                     date_columns = ['AcquisitionDate'], 
                                      hash_key = hash_key, sep = ','),
     'Notes': EMRDeidentification(file_name= path_to_data /'Combined_Radiology_Notes_with_EncounterNumber.csv',  deid_path= path_to_deid_data,
                                     type = 'Notes', 
