@@ -38,7 +38,7 @@ class EMRDeidentification:
 
         self.hash_key = hash_key
         self.path_to_deid_data = deid_path
-        save_path = self.path_to_deid_data / (str(self.file_name.stem) + '.dsv')
+        save_path = self.path_to_deid_data / (str(self.file_name.stem) + '_matched.dsv')
         self.sep = sep 
         print(self.type + ' file will be saved to ' + str(save_path))
 
@@ -49,6 +49,10 @@ class EMRDeidentification:
             self.df = pd.read_csv(self.file_name, sep = '|')
         elif self.file_name.suffix == '.pickle' or self.file_name.suffix == '.pkl':
             self.df = pd.read_pickle(self.file_name)
+        elif self.file_name.suffix == '.txt':
+            self.df = pd.read_csv(self.file_name, sep = self.sep)
+        else:
+            raise ValueError('File type not supported')
     
     def deidentify_age(self):
         """all age > 80 --> 80"""
@@ -61,28 +65,41 @@ class EMRDeidentification:
                 print(column + ' does not exist in ' + str(self.file_name))
         
 
-    def hash_identifiers(self, save = False):
+    def hash_identifiers(self, year, save = False):
         """
         hash identifiers in the dataframe, and save the matching list if save is True
         """
-        for column in self.hash_columns:
-            if column in self.df.columns:
-                self.df[column] = self.df[column].apply(lambda x: hash_value(x, self.hash_key))
-            elif column.upper() in self.df.columns:
-                self.df[column.upper()] = self.df[column.upper()].apply(lambda x: hash_value(x, self.hash_key))
-            else:
-                print(column + ' does not exist in ' + str(self.file_name))
-        
+
+        def ensure_string(column):
+            if str(self.df[column].dtype).startswith('float'):
+                self.df[column] = self.df[column].astype('int').astype(str)
+
+            
+            
         if save:
             for column in self.hash_columns:
                 matching_list = pd.DataFrame( columns= [column, column + '_deid'])
                 if column in self.df.columns:
+                    ensure_string(column)        
                     matching_list[column] = self.df[column].unique()
                 elif column.upper() in self.df.columns:
+                    ensure_string(column.upper())
                     matching_list[column] = self.df[column.upper()].unique()
                 matching_list[column + '_deid'] = matching_list[column].apply(lambda x: hash_value(x, self.hash_key))
-                matching_list.to_csv(self.file_name.parent / ('matching_list_Jan16_' + column + '.csv'), index = False)
-                print(column + " matching list saved to " + str(self.file_name.parent / ('matching_list_Jan16_' + column + '.csv')))
+                matching_list.to_csv(self.file_name.parent / ('matching_list_Feb13_' + str(year) + column + '.csv'), index = False)
+                print(column + " matching list saved to " + str(self.file_name.parent / ('matching_list_Feb13_' + str(year) + column + '.csv')))
+
+        for column in self.hash_columns:
+            if column in self.df.columns:
+                ensure_string(column)
+                self.df[column] = self.df[column].apply(lambda x: hash_value(x, self.hash_key))
+            elif column.upper() in self.df.columns:
+                ensure_string(column.upper())
+                self.df[column.upper()] = self.df[column.upper()].apply(lambda x: hash_value(x, self.hash_key))
+            else:
+                print(column + ' does not exist in ' + str(self.file_name))
+        
+        
     
     def drop_identifiers(self):
         """
@@ -135,7 +152,7 @@ class EMRDeidentification:
         return pd.to_datetime(date_unix_deid, unit = 's').strftime('%Y-%m-%d %H:%M:%S')
     
     def save_file(self):
-        self.df.to_csv(self.path_to_deid_data / (str(self.file_name.stem) + '.dsv'), index = False, sep = '|')
+        self.df.to_csv(self.path_to_deid_data / (str(self.file_name.stem) + '_matching.dsv'), index = False, sep = '|')
         del self.df
 
 def hash_value(value, hash_key):

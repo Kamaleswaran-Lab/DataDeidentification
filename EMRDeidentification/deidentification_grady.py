@@ -11,11 +11,11 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument('--index', type = int, required = True)
     args = parser.parse_args()
-    year = args.index
+    year = YEARS[args.index]
     print(year)
 
     path_to_data = Path('/labs/collab/K-lab-MODS/MODS-PHI/Grady_Data/')
-    path_to_deid_data = Path('/labs/collab/K-lab-MODS/deid_grady/noPHI')
+    path_to_deid_data = Path('/labs/collab/K-lab-MODS/deid_grady/')
 
     path_to_data = path_to_data 
     path_to_deid_data = path_to_deid_data / str(year) #'decomp_by_MRN'
@@ -23,8 +23,8 @@ if __name__ == "__main__":
 
 
     settings = {
-        """
-    'Encounter': EMRDeidentification(file_name= path_to_data / '1. Administrative Attributes/Encounters'/ f'encounter_2014-2022_decomp*.txt' , deid_path= path_to_deid_data,
+    'Encounter': EMRDeidentification(file_name= path_to_data / '1. Administrative Attributes/Encounters'/ f'encounters_{year}_decomp*.txt' , 
+                                     deid_path= path_to_deid_data,
                                      type = 'Encounter',  
                                      hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
                                      drop_columns = [], 
@@ -32,7 +32,9 @@ if __name__ == "__main__":
                                      age_columns = ['age'],
                                      date_columns = ['ed_presentation_time', 'hospital_admission_date_time', \
                                                      'hospital_discharge_date_time'], 
-                                     hash_key = hash_key),
+                                     hash_key = hash_key)}
+    legacy_settings = {
+    '''
     'BedLocation': EMRDeidentification(file_name= path_to_data / '1. Administrative Attributes/Bed Locations' /f'bed_location_2014-2022_decomp*.txt',  deid_path= path_to_deid_data,
                                     type = 'BedLocation', 
                                      hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
@@ -65,14 +67,14 @@ if __name__ == "__main__":
                                     date_columns = ['specimen_collect_time', 'order_time', 'lab_result_time'], 
                                     age_columns= [],
                                     hash_key = hash_key),
-    #'Labs': EMRDeidentification(file_name= path_to_data /'3. Labs & Cultures/Labs' / f'lab_2014-2022_decomp*.txt',  deid_path= path_to_deid_data,
-    #                                type = 'Labs',
-    #                                hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
-    #                                drop_columns = [], 
-    #                                categorical_columns = [], 
-    #                                age_columns= [],
-    #                                date_columns = ['collection_time', 'lab_result_time'], 
-    #                                hash_key = hash_key),
+    'Labs': EMRDeidentification(file_name= path_to_data /'3. Labs & Cultures/Labs' / f'lab_2014-2022_decomp*.txt',  deid_path= path_to_deid_data,
+                                    type = 'Labs',
+                                    hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+                                    drop_columns = [], 
+                                    categorical_columns = [], 
+                                   age_columns= [],
+                                   date_columns = ['collection_time', 'lab_result_time'], 
+                                    hash_key = hash_key),
     'Vitals': EMRDeidentification(file_name= path_to_data /'4. Patient Assessments/Vitals'/ f'vitals_2014-2022_decomp*.txt',  deid_path= path_to_deid_data,
                                     type = 'Vitals',
                                     hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
@@ -168,7 +170,7 @@ if __name__ == "__main__":
                                     categorical_columns = [], 
                                     date_columns = ['recorded_time'], 
                                     age_columns = [],
-                                    hash_key = hash_key), """
+                                    hash_key = hash_key), 
     'BLOODTRANSFUSIONS': EMRDeidentification(file_name= path_to_data /'2. Fluids & Meds/Blood Products'/ f'blood_transfusion*_{year}_decomp*.txt',  deid_path= path_to_deid_data,
                                 type = 'BLOODTRANSFUSIONS',
                                 hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
@@ -177,14 +179,15 @@ if __name__ == "__main__":
                                 date_columns = ['documented_time', 'order_time', 'transfusion_start', 'transfusion_end', 'transfusion_complete_time'], 
                                 age_columns = [],
                                 hash_key = hash_key),
-    #'INOUT': EMRDeidentification(file_name= path_to_data /'2. Fluids & Meds/In\'s & Out\'s'/ f'intake_output_2014-2022_decomp*.txt',  deid_path= path_to_deid_data,
-    #                            type = 'INOUT',
-    #                            hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
-    #                            drop_columns = [], 
-    #                            categorical_columns = [], 
-    #                            date_columns = ['documented_time'], 
-    #                            age_columns = [],
-    #                            hash_key = hash_key),
+    'INOUT': EMRDeidentification(file_name= path_to_data /'2. Fluids & Meds/In\'s & Out\'s'/ f'intake_output_2014-2022_decomp*.txt',  deid_path= path_to_deid_data,
+                                type = 'INOUT',
+                                hash_columns = ['pat_id', 'csn', 'har', 'mrn', 'study_id'], 
+                                drop_columns = [], 
+                                categorical_columns = [], 
+                                date_columns = ['documented_time'], 
+                            age_columns = [],
+                                hash_key = hash_key) 
+    '''
     } 
     
     #import pdb; pdb.set_trace()
@@ -192,7 +195,7 @@ if __name__ == "__main__":
         print(key)
         settings[key].read_file()
         if key == 'Encounter':
-            settings[key].hash_identifiers(save = True)
+            settings[key].hash_identifiers(year = year, save = True)
         else:
             settings[key].hash_identifiers()
         settings[key].drop_identifiers()

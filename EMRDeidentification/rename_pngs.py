@@ -12,10 +12,19 @@ def rename_png(file):
     new_file_name = '_'.join(file_name_parts)
     return new_file_name
 
+def rename_supertable(file):
+    new_file_name = hash_value(file, hash_key)
+    return new_file_name
+
 def copy_file(file):
     file_name = file.stem
-    new_file_name = rename_png(file_name)
-    new_file_path = path_to_deid_data / (new_file_name + '.png')
+
+    if str(file).endswith('png'):
+        new_file_name = rename_png(file_name)
+        new_file_path = path_to_deid_data / (new_file_name + '.png')
+    elif str(file).endswith('pickle'):
+        new_file_name = rename_supertable(file_name)
+        new_file_path = path_to_deid_data / (new_file_name + '.pickle')
     shutil.copy(file, new_file_path)
     print(f'Copied {file} to {new_file_path}')
     
@@ -32,11 +41,11 @@ if __name__ == "__main__":
     year = YEARS[args.index]
     print(year)
 
-    path_to_data = path_to_data / str(year)
-    path_to_deid_data = path_to_deid_data / str(year) / 'extracted-images'
+    path_to_data = path_to_data / str(year) / 'matched_supertables_with_images'
+    path_to_deid_data = path_to_deid_data / str(year) / 'matched_supertables_with_images'
     path_to_deid_data.mkdir(parents = True, exist_ok = True)
 
-    files = list(path_to_data.glob('extracted-images/*.png'))
+    files = list(path_to_data.glob('*.pickle'))
 
     print(f'Copying {len(files)} files')
     
