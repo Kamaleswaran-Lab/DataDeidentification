@@ -1,0 +1,24 @@
+2025-03-17 14:22:38,866 - INFO - Starting folder summary for: /labs/collab/Imaging/Imaging-PHI/Grady_Images
+2025-03-17 14:22:38,877 - INFO - Calculating size of main directory (/labs/collab/Imaging/Imaging-PHI/Grady_Images)...
+2025-03-18 01:53:46,491 - INFO - Base directory size: 11.50 TB
+2025-03-18 01:53:46,529 - INFO - Scanning first-level directories...
+2025-03-18 02:02:12,890 - INFO - ==================================================
+2025-03-18 02:02:12,891 - INFO - Total first-level folders: 30879
+2025-03-18 02:02:12,891 - INFO - Main directory size: 11.50 TB
+2025-03-18 02:02:12,891 - INFO - 
+Newest folders:
+2025-03-18 02:02:12,891 - INFO - 2025-03-18 01:48:22 - 101054114 - Subfolders: 2
+2025-03-18 02:02:12,891 - INFO - 2024-10-16 13:49:53 - 100042699 - Subfolders: 1
+2025-03-18 02:02:12,891 - INFO - 2024-03-11 04:20:04 - 3802548 - Subfolders: 1
+2025-03-18 02:02:12,891 - INFO - 2023-11-29 00:46:12 - 100889370 - Subfolders: 1
+2025-03-18 02:02:12,891 - INFO - 2023-11-20 09:20:00 - 3902540 - Subfolders: 1
+2025-03-18 02:02:12,891 - INFO - 
+Oldest folders:
+2025-03-18 02:02:12,891 - INFO - 2025-03-18 01:48:22 - 101054114 - Subfolders: 2
+2025-03-18 02:02:12,891 - INFO - 2025-03-18 01:39:29 - 11414556 - Subfolders: 1
+2025-03-18 02:02:12,891 - INFO - 2025-03-18 01:39:28 - 101056847 - Subfolders: 2
+2025-03-18 02:02:12,891 - INFO - 2025-03-18 01:30:47 - 11178285 - Subfolders: 2
+2025-03-18 02:02:12,891 - INFO - 2025-03-18 01:28:02 - 100886314 - Subfolders: 3
+2025-03-18 02:02:12,993 - INFO - 
+Complete list of folders written to: /home/maror24/ImageAnon/DataDeidentification/ImageDeidentification/folder_list.csv
+2025-03-18 02:02:12,994 - INFO - Log file written to: /home/maror24/ImageAnon/DataDeidentification/ImageDeidentification/folder_summary.log

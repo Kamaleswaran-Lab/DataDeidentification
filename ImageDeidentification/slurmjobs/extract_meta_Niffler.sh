@@ -9,11 +9,11 @@
 
 #SBATCH --mem 128G
 
-#SBATCH -o ../OutputErrorFiles/metaGrady.out
-#SBATCH -e ../OutputErrorFiles/metaGrady.err
+#SBATCH -o ../OutputErrorFiles/metaGradyMarch18.out
+#SBATCH -e ../OutputErrorFiles/metaGradyMarch18.err
 
 source /home/maror24/anaconda3/bin/deactivate
-source /home/maror24/anaconda3/bin/activate rapids
+source /home/maror24/anaconda3/bin/activate rapids-24.12
 
 echo "This task is : $SLURM_ARRAY_TASK_ID"
 
