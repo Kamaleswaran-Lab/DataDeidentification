@@ -8,26 +8,27 @@ YEARS = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022]
 hash_key = '123'
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
-    parser.add_argument('--index', type = int, required = True)
-    args = parser.parse_args()
-    year = YEARS[args.index]
-    print(year)
+    #parser = ArgumentParser()
+    #parser.add_argument('--index', type = int, required = True)
+    #args = parser.parse_args()
+    #year = YEARS[args.index]
+    #print(year)
 
-    path_to_data = Path('/labs/collab/K-lab-MODS/MODS-PHI/Emory_Data/')
-    path_to_deid_data = Path('/labs/collab/K-lab-MODS/deid_Emory/noPHI')
+    path_to_data = Path('/labs/collab/K-lab-MODS/MODS-PHI/Fluids/')
+    path_to_deid_data = Path('/opt/scratchspace/mehak/') 
 
-    path_to_data = path_to_data / str(year)
-    path_to_deid_data = path_to_deid_data / str(year)
-    path_to_deid_data.mkdir(parents = True, exist_ok = True)
+    #path_to_data = path_to_data / str(year)
+    #path_to_deid_data = path_to_deid_data / str(year)
+    #path_to_deid_data.mkdir(parents = True, exist_ok = True)
 
 
+    """ 
     settings = {
-    'Encounter': EMRDeidentification(file_name= path_to_data / f'CJSEPSIS_ENCOUNTER_{year}.dsv' , deid_path= path_to_deid_data,
-                                     type = 'Encounter',  
-                                     hash_columns = ['pat_id', 'csn'], 
-                                     drop_columns = ['zip_code'], 
-                                     categorical_columns = ['facility_nm'], 
+        'Encounter': EMRDeidentification(file_name= path_to_data / f'CJSEPSIS_ENCOUNTER_{year}.dsv' , deid_path= path_to_deid_data,
+                                        type = 'Encounter',  
+                                        hash_columns = ['pat_id', 'csn'], 
+                                        drop_columns = ['zip_code'], 
+                                        categorical_columns = ['facility_nm'], 
                                      date_columns = ['ed_presentation_time', 'hospital_admission_date_time', \
                                                      'hospital_discharge_date_time'], 
                                      age_columns= ['age'],
@@ -128,8 +129,34 @@ if __name__ == "__main__":
                                     drop_columns = [], age_columns= [],
                                     categorical_columns = [], 
                                     date_columns = ['recorded_time', 'vent_start_time', 'vent_stop_time', 'vent_recorded_time'], 
-                                    hash_key = hash_key, sep = ',')
+                                    hash_key = hash_key, sep = ','),
+    #'o2_flow_rate': EMRDeidentification(file_name= path_to_data /f'o2_flow_rate_{year}.csv',  deid_path= path_to_deid_data,
+    #                                type = 'o2_flow_rate',
+    #                                hash_columns = ['pat_id', 'csn'], 
+    #                                drop_columns = [], age_columns= [],
+    #                                categorical_columns = [], 
+    #                                date_columns = ['recorded_time'], 
+    #                                hash_key = hash_key, sep = ',') 
+    
+    
     } 
+
+    """
+
+    settings = {
+        'IN_OUT': EMRDeidentification(
+            file_name = path_to_data / 'CJSEPSIS_OUT_EO3.txt',
+            deid_path = path_to_deid_data,
+            type = 'IN_OUT',
+            hash_columns = ['CSN'],
+            drop_columns = [],
+            categorical_columns = [],
+            age_columns = [],
+            date_columns = ['SERVICE_DATE', 'SERVICE_TS', 'ORDER_TS'], 
+            hash_key = hash_key,
+            sep = '|'
+        )
+    }
     
     #import pdb; pdb.set_trace()
     for key in settings:
@@ -138,9 +165,9 @@ if __name__ == "__main__":
         print(key)
         settings[key].read_file()
         if key == 'Encounter':
-            settings[key].hash_identifiers(year = year, save = True)
+            settings[key].hash_identifiers(year = '14_21', save = True)
         else:
-            settings[key].hash_identifiers(year = year)
+            settings[key].hash_identifiers(year = '14_21')
         settings[key].drop_identifiers()
         settings[key].convert_to_categorical()
         settings[key].shift_dates()

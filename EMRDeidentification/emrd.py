@@ -38,7 +38,7 @@ class EMRDeidentification:
 
         self.hash_key = hash_key
         self.path_to_deid_data = deid_path
-        save_path = self.path_to_deid_data / (str(self.file_name.stem) + '_matched.dsv')
+        save_path = self.path_to_deid_data / (str(self.file_name.stem) + '.dsv')
         self.sep = sep 
         print(self.type + ' file will be saved to ' + str(save_path))
 
@@ -152,7 +152,7 @@ class EMRDeidentification:
         return pd.to_datetime(date_unix_deid, unit = 's').strftime('%Y-%m-%d %H:%M:%S')
     
     def save_file(self):
-        self.df.to_csv(self.path_to_deid_data / (str(self.file_name.stem) + '_matching.dsv'), index = False, sep = '|')
+        self.df.to_csv(self.path_to_deid_data / (str(self.file_name.stem) + '.dsv'), index = False, sep = '|')
         del self.df
 
 def hash_value(value, hash_key):
