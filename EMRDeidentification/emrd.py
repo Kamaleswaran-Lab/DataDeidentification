@@ -5,7 +5,7 @@ import glob
 
 class EMRDeidentification:
     def __init__(self, file_name, deid_path,  type, hash_columns, drop_columns, categorical_columns, age_columns,
-                  date_columns, hash_key = '123', sep = '|'):
+                  date_columns, hash_key , sep = '|'):
         """
         Arguments:
 
